@@ -12,7 +12,7 @@ namespace GenericValidatorPOC.Core.Tests
     [Test]
     public void ValidatorProviderShouldHaveHostInitializerRegisteredValidators()
     {
-      Assert.IsTrue(ValidatorProvider.Instance.HasValidatorOf<MockHostInitializerModel>());
+      Assert.IsTrue(ValidatorProvider.Instance.HasValidatorOf<MockHostInitializerRegisteredModel>());
     }
 
     [Test]
@@ -24,10 +24,10 @@ namespace GenericValidatorPOC.Core.Tests
     [Test]
     public void ValidatorProviderShouldBeAbleToCreateValidatorsWithATypeSafeApi()
     {
-      Assert.Throws<InvalidMockHostInitializerModelMessageError>(() =>
+      Assert.Throws<InvalidMockHostInitializerRegisteredModelMessageError>(() =>
       {
-        var validator = ValidatorProvider.Instance.CreateValidatorOf<MockHostInitializerModel>();
-        var model = new MockHostInitializerModel();
+        var validator = ValidatorProvider.Instance.CreateValidatorOf<MockHostInitializerRegisteredModel>();
+        var model = new MockHostInitializerRegisteredModel();
         validator?.Validate(model);
       });
     }
@@ -54,7 +54,7 @@ namespace GenericValidatorPOC.Core.Tests
     {
       Assert.Throws<InvalidCastException>(() =>
       {
-        var validator = ValidatorProvider.Instance.CreateValidatorInstanceOfAs<MockHostInitializerModel, AttributeRegisteredModelValidator>();
+        var validator = ValidatorProvider.Instance.CreateValidatorInstanceOfAs<MockHostInitializerRegisteredModel, AttributeRegisteredModelValidator>();
       });
     }
 

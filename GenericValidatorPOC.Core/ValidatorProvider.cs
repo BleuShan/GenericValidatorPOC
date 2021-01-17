@@ -1,26 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq;
 
 namespace GenericValidatorPOC.Core
 {
-  public class ValidatorProvider
+  public sealed class ValidatorProvider
   {
-    private static readonly Lazy<ValidatorProvider> _holder = new Lazy<ValidatorProvider>(() => new ValidatorProvider());
-    private readonly ConcurrentDictionary<Type, Type> _validators = new ConcurrentDictionary<Type, Type>();
+    public sealed class Builder
+    {
+      internal static readonly Builder Instance = new();
+      internal Dictionary<Type, Type> _validators = new();
+
+      internal ValidatorProvider Build()
+      {
+        return new ValidatorProvider(this);
+      }
+
+      public ValidatorProvider.Builder Register(Type targetType, Type validatorType)
+      {
+        _validators.Add(targetType, validatorType);
+        return this;
+      }
+
+      public ValidatorProvider.Builder Register<TargetT, ValidatorT>() where TargetT : new() where ValidatorT : IValidator<TargetT>, new()
+      {
+        return Register(typeof(TargetT), typeof(ValidatorT));
+      }
+    }
+
+    private static readonly Lazy<ValidatorProvider> _instanceHolder = new(() => Builder.Instance.Build());
+    private readonly Dictionary<Type, Type> _validators;
 
     public static ValidatorProvider Instance
     {
       get
       {
-        return _holder.Value;
+        return _instanceHolder.Value;
       }
     }
 
-    private ValidatorProvider()
+    private ValidatorProvider(Builder builder)
     {
+      _validators = builder._validators;
+    }
+
+    public bool HasValidator<ValidatorT>()
+    {
+      return HasValidator(typeof(ValidatorT));
+    }
+
+    public bool HasValidator(Type targetType)
+    {
+      return _validators.Values.FirstOrDefault(validatorType => validatorType == targetType) != null;
     }
 
     public bool HasValidatorOf<TargetT>() where TargetT : new()
@@ -35,13 +67,11 @@ namespace GenericValidatorPOC.Core
 
     public ValidatorT? Create<ValidatorT>(params object?[]? args) where ValidatorT : new()
     {
-      var targetType = typeof(ValidatorT);
-      var validatorType = _validators.Values.FirstOrDefault(validatorType => validatorType == targetType);
-      if (validatorType == null)
+      if (!HasValidator<ValidatorT>())
       {
-        throw new KeyNotFoundException($"Could not resolve {validatorType}");
+        throw new KeyNotFoundException($"Could not resolve {typeof(ValidatorT)}");
       }
-      return (ValidatorT?)Activator.CreateInstance(validatorType, args);
+      return (ValidatorT?)Activator.CreateInstance(typeof(ValidatorT), args);
     }
 
     public object? CreateValidatorInstanceOf<TargetT>(params object?[]? args) where TargetT : new()
@@ -58,18 +88,6 @@ namespace GenericValidatorPOC.Core
     public IValidator<TargetT>? CreateValidatorOf<TargetT>(params object?[]? args) where TargetT : new()
     {
       return CreateValidatorInstanceOfAs<TargetT, IValidator<TargetT>>(args);
-    }
-
-    public ValidatorProvider Register(Type targetType, Type validatorType)
-    {
-      if (HasValidatorOf(targetType)) return this;
-      _validators.TryAdd(targetType, validatorType);
-      return this;
-    }
-
-    public ValidatorProvider Register<TargetT, ValidatorT>() where TargetT : new() where ValidatorT : IValidator<TargetT>, new()
-    {
-      return Register(typeof(TargetT), typeof(ValidatorT));
     }
   }
 }

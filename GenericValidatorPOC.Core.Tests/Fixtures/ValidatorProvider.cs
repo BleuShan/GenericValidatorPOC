@@ -5,34 +5,34 @@ namespace GenericValidatorPOC.Core.Tests.ValidatorProviderFixtures
 {
   public class MockHostInitializer : IHostInitializer
   {
-    public void Configure(ValidatorProvider provider)
+    public void Configure(ValidatorProvider.Builder builder)
     {
-      provider.Register<MockHostInitializerModel, MockHostInitializerModelValidator>();
+      builder.Register<MockHostInitializerRegisteredModel, MockHostInitializerRegisteredModelValidator>();
     }
   }
 
-  public class MockHostInitializerModel
+  public class MockHostInitializerRegisteredModel
   {
     public string? Message;
   }
 
-  public class InvalidMockHostInitializerModelMessageError : System.Exception
+  public class InvalidMockHostInitializerRegisteredModelMessageError : System.Exception
   {
-    public readonly MockHostInitializerModel DataItem;
+    public readonly MockHostInitializerRegisteredModel DataItem;
 
-    public InvalidMockHostInitializerModelMessageError(MockHostInitializerModel item) : base($"{nameof(item.Message)} must not be empty")
+    public InvalidMockHostInitializerRegisteredModelMessageError(MockHostInitializerRegisteredModel item) : base($"{nameof(item.Message)} must not be empty")
     {
       DataItem = item;
     }
   }
 
-  public class MockHostInitializerModelValidator : IValidator<MockHostInitializerModel>
+  public class MockHostInitializerRegisteredModelValidator : IValidator<MockHostInitializerRegisteredModel>
   {
-    public void Validate(MockHostInitializerModel model)
+    public void Validate(MockHostInitializerRegisteredModel model)
     {
       if (string.IsNullOrWhiteSpace(model.Message))
       {
-        throw new InvalidMockHostInitializerModelMessageError(model);
+        throw new InvalidMockHostInitializerRegisteredModelMessageError(model);
       }
     }
   }
