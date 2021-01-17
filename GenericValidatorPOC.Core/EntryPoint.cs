@@ -26,7 +26,7 @@ namespace GenericValidatorPOC.Core
 
       foreach (var initializerType in initializerTypes)
       {
-        var initializer = (IHostInitializer)Activator.CreateInstance(initializerType);
+        var initializer = (IHostInitializer?)Activator.CreateInstance(initializerType);
         initializer?.Configure(validatorProvider);
       }
     }

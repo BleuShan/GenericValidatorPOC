@@ -33,25 +33,31 @@ namespace GenericValidatorPOC.Core
       return _validators.ContainsKey(targetType);
     }
 
-    public object? Create<TargetT>(params object?[]? args) where TargetT : new()
+    public ValidatorT? Create<ValidatorT>(params object?[]? args) where ValidatorT : new()
     {
-      var validatorType = _validators.GetValueOrDefault(typeof(TargetT));
-      if (validatorType != null)
+      var targetType = typeof(ValidatorT);
+      var validatorType = _validators.Values.FirstOrDefault(validatorType => validatorType == targetType);
+      if (validatorType == null)
       {
-        return Activator.CreateInstance(validatorType, args);
+        throw new KeyNotFoundException($"Could not resolve {validatorType}");
       }
-
-      return null;
+      return (ValidatorT?)Activator.CreateInstance(validatorType, args);
     }
 
-    public ValidatorT? CreateAs<TargetT, ValidatorT>(params object?[]? args) where TargetT : new()
+    public object? CreateValidatorInstanceOf<TargetT>(params object?[]? args) where TargetT : new()
     {
-      return (ValidatorT?)Create<TargetT>(args);
+      var validatorType = _validators[typeof(TargetT)];
+      return Activator.CreateInstance(validatorType, args);
+    }
+
+    public ValidatorT? CreateValidatorInstanceOfAs<TargetT, ValidatorT>(params object?[]? args) where TargetT : new()
+    {
+      return (ValidatorT?)CreateValidatorInstanceOf<TargetT>(args);
     }
 
     public IValidator<TargetT>? CreateValidatorOf<TargetT>(params object?[]? args) where TargetT : new()
     {
-      return CreateAs<TargetT, IValidator<TargetT>>(args);
+      return CreateValidatorInstanceOfAs<TargetT, IValidator<TargetT>>(args);
     }
 
     public ValidatorProvider Register(Type targetType, Type validatorType)
