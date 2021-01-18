@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GenericValidatorPOC.Core
+﻿namespace GenericValidatorPOC.Core
 {
   public interface IHostInitializer
 

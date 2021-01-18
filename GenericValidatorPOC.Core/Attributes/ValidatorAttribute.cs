@@ -9,6 +9,11 @@ namespace GenericValidatorPOC.Core.Attributes
 
     public ValidatorAttribute(Type targetType)
     {
+      if (targetType == null)
+      {
+        throw new ArgumentNullException($"{nameof(TargetType)} must not be null");
+      }
+
       TargetType = targetType;
     }
   }

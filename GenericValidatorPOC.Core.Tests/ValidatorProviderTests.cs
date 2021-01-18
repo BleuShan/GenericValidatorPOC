@@ -1,9 +1,9 @@
-using NUnit.Framework;
-using GenericValidatorPOC.Core;
-using System.Reflection;
-using GenericValidatorPOC.Core.Tests.ValidatorProviderFixtures;
 using System;
 using System.Collections.Generic;
+
+using GenericValidatorPOC.Core.Tests.ValidatorProviderFixtures;
+
+using NUnit.Framework;
 
 namespace GenericValidatorPOC.Core.Tests
 {

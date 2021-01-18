@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
 
 namespace GenericValidatorPOC.Core
@@ -65,7 +64,7 @@ namespace GenericValidatorPOC.Core
       return _validators.ContainsKey(targetType);
     }
 
-    public ValidatorT? Create<ValidatorT>(params object?[]? args) where ValidatorT : new()
+    public ValidatorT? Create<ValidatorT>(params object?[]? args) where ValidatorT : class, new()
     {
       if (!HasValidator<ValidatorT>())
       {
