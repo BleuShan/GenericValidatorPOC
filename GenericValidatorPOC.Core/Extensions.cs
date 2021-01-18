@@ -2,7 +2,7 @@
 
 namespace GenericValidatorPOC.Core
 {
-  internal static class Extensions
+  public static class Extensions
   {
     public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TKey : notnull
     {

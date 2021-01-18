@@ -34,5 +34,13 @@ namespace GenericValidatorPOC.Core.Tests
       var error = builder?.Message(expectedMessage).Build();
       Assert.AreEqual(expectedMessage, error?.Message);
     }
+
+    [Test]
+    public void ValidationErrorShouldBeAbleToReportFormattedMessages()
+    {
+      expectedModel?.Value = 5;
+      var error = builder?.Format($"{new ValidationErrorMessageDataFieldValuePlaceholder("Value"):0.00f}").DataItem(expectedModel).Build();
+      Assert.AreEqual($"{expectedModel?.Value:0.00f}", error?.Message);
+    }
   }
 }

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace GenericValidatorPOC.Core
 {
-  internal static class EntryPoint
+  internal static class Module
   {
     [ModuleInitializer]
     public static void Initialize()
