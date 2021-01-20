@@ -1,7 +1,6 @@
-﻿namespace GenericValidatorPOC.Core
-{
-  public interface IValidator<TargetT> where TargetT : new()
-  {
-    void Validate(TargetT target);
+﻿namespace GenericValidatorPOC.Core {
+  public interface IValidator<TArgetT>
+    where TArgetT : new() {
+    void Validate(TArgetT target);
   }
 }

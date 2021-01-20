@@ -1,8 +1,5 @@
-﻿namespace GenericValidatorPOC.Core
-{
-  public interface IHostInitializer
-
-  {
+﻿namespace GenericValidatorPOC.Core {
+  public interface IHostInitializer {
     public void Configure(ValidatorProvider.Builder builder);
   }
 }

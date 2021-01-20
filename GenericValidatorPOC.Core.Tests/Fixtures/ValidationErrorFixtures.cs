@@ -1,17 +1,15 @@
 ﻿using System;
 
-namespace GenericValidatorPOC.Core.Tests.ValidatorErrorFixtures
-{
-  public class TestModel
-  {
+namespace GenericValidatorPOC.Core.Tests.ValidatorErrorFixtures {
+  public class ValidatorErrorTestModel {
     public int Value { get; set; }
   }
 
-  public class ValidationErrorFormatter : IValidationErrorMessageFormatter
-  {
-    public object? GetFormat(Type? formatType)
-    {
-      throw new NotImplementedException();
-    }
+  public class ValidatorErrorTestFormatter : IValidationErrorMessageFormatter {
+    public string Format(string? format, object? arg, IFormatProvider? formatProvider) =>
+      string.Format(formatProvider, "{0}", arg);
+
+    public object? GetFormat(Type? formatType) =>
+      GetType().IsAssignableTo(formatType) ? this : null;
   }
 }

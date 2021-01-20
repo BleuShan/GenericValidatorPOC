@@ -1,6 +1,5 @@
-﻿namespace GenericValidatorPOC.Core
-{
-  public interface IValidationErrorMessageFormatter
-  {
-  }
+﻿using System;
+
+namespace GenericValidatorPOC.Core {
+  public interface IValidationErrorMessageFormatter : IFormatProvider, ICustomFormatter { }
 }
